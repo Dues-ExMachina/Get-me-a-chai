@@ -92,14 +92,13 @@ const Navbar = () => {
                                 className="flex items-center space-x-2 "
                             >
                                <Image
-                                    src={profileSrc}
-                                    alt="Profile"
-                                    width={32}
-                                    height={32}
-                                    className="rounded-full"
-                                    style={{ width: '2rem', height: '2rem' }}
-                                    unoptimized={!profileSrc.startsWith("/")} // unoptimized only for external URLs
-                                />
+  src={profileSrc}
+  alt="Profile"
+  width={32}
+  height={32}
+  className="rounded-full"
+  style={{ width: '2rem', height: '2rem' }}
+/>
                                 <span className="hidden sm:inline">{session.user.name}</span>
                             </button>
 
