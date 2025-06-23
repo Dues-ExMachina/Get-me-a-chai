@@ -1,10 +1,10 @@
+// --- START OF FILE useractions.js ---
 'use server'
 
 import connectDb from "@/utils/db/connectDb";
 import User from "@/models/User";
 import Payment from "@/models/Payment";
 import Razorpay from "razorpay";
-
 
 export const initiate = async (amount, to_user, paymentform) => {
     await connectDb();
@@ -14,39 +14,52 @@ export const initiate = async (amount, to_user, paymentform) => {
         throw new Error("Creator not found");
     }
 
-    // ✅ ADD THIS VALIDATION BLOCK
     if (!user.Razorpayid || !user.Razorpaysecret) {
         throw new Error("This creator has not set up payments yet.");
     }
 
-    var instance = new Razorpay({
-        key_id: user.Razorpayid,
-        key_secret: user.Razorpaysecret
-    });
+    // ✅ WRAP THE EXTERNAL API CALL IN A try...catch BLOCK
+    try {
+        const instance = new Razorpay({
+            key_id: user.Razorpayid,
+            key_secret: user.Razorpaysecret
+        });
 
-    let options = {
-        amount: Number.parseInt(amount),
-        currency: "INR",
-        receipt: `receipt_${Date.now()}`,
-        notes: {
+        const options = {
+            amount: Number.parseInt(amount),
+            currency: "INR",
+            receipt: `receipt_${Date.now()}`,
+            notes: {
+                name: paymentform.name,
+                message: paymentform.message
+            }
+        };
+
+        // This is the line that is likely failing
+        const order = await instance.orders.create(options);
+
+        // Create a pending payment record in your DB
+        await Payment.create({
+            amount: amount / 100,
+            to_user: user.username,
+            oid: order.id,
+            status: "pending",
+            message: paymentform.message,
             name: paymentform.name,
-            message: paymentform.message
-        }
-    };
-    let x = await instance.orders.create(options);
+        });
 
-    await Payment.create({
-        amount: amount / 100,
-        to_user: user.username,
-        oid: x.id,
-        status: "pending",
-        message: paymentform.message,
-        name: paymentform.name,
-    });
-    return x;
+        return order;
+
+    } catch (error) {
+        // Log the actual error from Razorpay on the server for your own debugging
+        console.error("Razorpay Error:", error);
+
+        // Throw a generic, safe error message back to the client
+        throw new Error("Could not create payment order. The creator's payment keys might be invalid.");
+    }
 }
 
-// ... other functions remain the same
+// ... rest of the file is unchanged
 export const fetchuser = async (username) => {
     await connectDb();
     let u = await User.findOne({ username: username }).lean();
