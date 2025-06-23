@@ -17,8 +17,7 @@ const connectDb = async () => {
 
     if (!cached.promise) {
         cached.promise = mongoose.connect(MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+
         }).then((mongoose) => {
             console.log("MongoDB Connected");
             return mongoose;
