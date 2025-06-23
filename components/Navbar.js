@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { fetchuser } from '@/actions/useractions'
 import localFont from 'next/font/local'
+
+
 const myFont = localFont({
     src: '../font/Nevol.woff2',
 })
@@ -42,7 +44,8 @@ const Navbar = () => {
 
     // State for search input
     const [search, setSearch] = useState("")
-
+    //Profile pic
+    const profileSrc = dbUser?.profilepic || session.user.image || "/images/profile2.jpg";
     // Handler for form submit
     const handleSearchSubmit = (e) => {
         e.preventDefault()
@@ -90,7 +93,7 @@ const Navbar = () => {
                                 onClick={() => setShowDropdown(!showDropdown)}
                                 className="flex items-center space-x-2 "
                             >
-                                <Image
+                                {/* <Image
                                     src={dbUser?.profilepic || session.user.image || "/images/profile2.jpg"}
                                     alt="Profile"
                                     width={32}
@@ -98,6 +101,25 @@ const Navbar = () => {
                                     className="rounded-full"
                                     style={{ width: '2rem', height: '2rem' }} // tailwind w-8 h-8 = 2rem
                                     unoptimized={!(src?.startsWith("/"))} // optional: if external URL and you want to skip optimization
+                                /> */}
+                                <Image
+                                    src={profileSrc}
+                                    alt="Profile"
+                                    width={32}
+                                    height={32}
+                                    className="rounded-full"
+                                    style={{ width: '2rem', height: '2rem' }}
+                                    unoptimized={!profileSrc.startsWith("/")} // unoptimized only for external URLs
+                                />
+                                const profileSrc = dbUser?.profilepic || session.user.image || "/images/profile2.jpg";
+
+                                <Image
+                                    src={profileSrc}
+                                    alt="Profile"
+                                    width={32}
+                                    height={32}
+                                    className="rounded-full"
+                                    style={{ width: '2rem', height: '2rem' }}
                                 />
                                 <span className="hidden sm:inline">{session.user.name}</span>
                             </button>
