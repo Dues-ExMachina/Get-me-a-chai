@@ -60,7 +60,7 @@ const PaymentPage = () => {
             });
         }
         router.push(`/${username}`); // Redirect to the same page to clear the query param
-    }, [searchParams]);
+    }, [searchParams, router, username]);
 
 
     function handleChange(e) {

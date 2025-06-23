@@ -26,16 +26,55 @@ const Dashboard = () => {
         Razorpaysecret: ""
     });
 
-    useEffect(() => {
-        getdata();
-        if (status === 'unauthenticated') {
-            router.push('/login');
-        }
-    }, [getdata, status, router]);
+    // useEffect(() => {
+    //     getdata();
+    //     if (status === 'unauthenticated') {
+    //         router.push('/login');
+    //     }
+    // }, [getdata, status, router]);
 
 
 
-    const getdata = async () => {
+    // const getdata = async () => {
+    //     if (!session?.user?.name) return;
+    //     let u = await fetchuser(session.user.name);
+    //     if (u) {
+    //         setForm({
+    //             name: u.name || "",
+    //             email: u.email || "",
+    //             username: u.username || "",
+    //             profilepic: u.profilepic || "",
+    //             coverpic: u.coverpic || "",
+    //             Razorpayid: u.Razorpayid || "",
+    //             Razorpaysecret: u.Razorpaysecret || ""
+    //         });
+    //     }
+    // }
+
+    //     const getdata = useCallback(async () => {
+    //     if (!session?.user?.name) return;
+    //     let u = await fetchuser(session.user.name);
+    //     if (u) {
+    //         setForm({
+    //             name: u.name || "",
+    //             email: u.email || "",
+    //             username: u.username || "",
+    //             profilepic: u.profilepic || "",
+    //             coverpic: u.coverpic || "",
+    //             Razorpayid: u.Razorpayid || "",
+    //             Razorpaysecret: u.Razorpaysecret || ""
+    //         });
+    //     }
+    // }, [session]); // Include any dependencies it uses
+
+    // useEffect(() => {
+    //     getdata();
+    //     if (status === 'unauthenticated') {
+    //         router.push('/login');
+    //     }
+    // }, [getdata, status, router]);
+
+    const getdata = useCallback(async () => {
         if (!session?.user?.name) return;
         let u = await fetchuser(session.user.name);
         if (u) {
@@ -49,7 +88,14 @@ const Dashboard = () => {
                 Razorpaysecret: u.Razorpaysecret || ""
             });
         }
-    }
+    }, [session]);
+    useEffect(() => {
+        getdata();
+        if (status === 'unauthenticated') {
+            router.push('/login');
+        }
+    }, [getdata, status, router]);
+
 
     if (status === 'loading') {
         return <div>Loading...</div>;
