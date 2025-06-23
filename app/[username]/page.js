@@ -1,12 +1,12 @@
+// --- START OF FILE page.js (in app/[username]/) ---
+// Make absolutely sure this is the entire content of the file.
 
+export const dynamic = 'force-dynamic';
 
-export const dynamic = 'force-dynamic'; // ✅ This tells Next.js: "don't pre-render"
-
-import PaymentPage from "@/components/PaymentPage"
+import PaymentPage from "@/components/PaymentPage";
 import { notFound } from "next/navigation";
 import connectDb from "@/utils/db/connectDb";
 import User from "@/models/User";
-
 
 const Username = async ({ params }) => {
     await connectDb();
