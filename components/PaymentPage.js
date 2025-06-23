@@ -65,9 +65,13 @@ const PaymentPage = () => {
     const { data: session, status } = useSession()
 
     // get the orderID
-    const payment = async (amount) => {
+   const payment = async (amount) => {
+    if (!username) return;
+
+    // ✅ WRAP THE SERVER ACTION CALL IN A try...catch BLOCK
+    try {
         let a = await initiate(amount, username, paymentform);
-        let orderId = a.id; // Razorpay returns order ID as 'id'
+        let orderId = a.id;
 
         var options = {
             "key": currentuser.Razorpayid,
@@ -109,7 +113,13 @@ const PaymentPage = () => {
 
         var rzp1 = new window.Razorpay(options);
         rzp1.open();
-    };
+
+    } catch (error) {
+        // This will catch the error from the server action and display it
+        console.error("Payment initiation failed:", error);
+        toast.error(error.message); // e.g., "This creator has not set up payments yet."
+    }
+};
 
     if (status === "loading") {
         return (
