@@ -1,6 +1,5 @@
 "use client"
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Bounce } from 'react-toastify';
@@ -26,53 +25,6 @@ const Dashboard = () => {
         Razorpaysecret: ""
     });
 
-    // useEffect(() => {
-    //     getdata();
-    //     if (status === 'unauthenticated') {
-    //         router.push('/login');
-    //     }
-    // }, [getdata, status, router]);
-
-
-
-    // const getdata = async () => {
-    //     if (!session?.user?.name) return;
-    //     let u = await fetchuser(session.user.name);
-    //     if (u) {
-    //         setForm({
-    //             name: u.name || "",
-    //             email: u.email || "",
-    //             username: u.username || "",
-    //             profilepic: u.profilepic || "",
-    //             coverpic: u.coverpic || "",
-    //             Razorpayid: u.Razorpayid || "",
-    //             Razorpaysecret: u.Razorpaysecret || ""
-    //         });
-    //     }
-    // }
-
-    //     const getdata = useCallback(async () => {
-    //     if (!session?.user?.name) return;
-    //     let u = await fetchuser(session.user.name);
-    //     if (u) {
-    //         setForm({
-    //             name: u.name || "",
-    //             email: u.email || "",
-    //             username: u.username || "",
-    //             profilepic: u.profilepic || "",
-    //             coverpic: u.coverpic || "",
-    //             Razorpayid: u.Razorpayid || "",
-    //             Razorpaysecret: u.Razorpaysecret || ""
-    //         });
-    //     }
-    // }, [session]); // Include any dependencies it uses
-
-    // useEffect(() => {
-    //     getdata();
-    //     if (status === 'unauthenticated') {
-    //         router.push('/login');
-    //     }
-    // }, [getdata, status, router]);
 
     const getdata = useCallback(async () => {
         if (!session?.user?.name) return;
