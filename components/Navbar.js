@@ -111,16 +111,16 @@ const Navbar = () => {
                                     style={{ width: '2rem', height: '2rem' }}
                                     unoptimized={!profileSrc.startsWith("/")} // unoptimized only for external URLs
                                 />
-                                const profileSrc = dbUser?.profilepic || session.user.image || "/images/profile2.jpg";
+                                {/* const profileSrc = dbUser?.profilepic || session.user.image || "/images/profile2.jpg"; */}
 
-                                <Image
+                                {/* <Image
                                     src={profileSrc}
                                     alt="Profile"
                                     width={32}
                                     height={32}
                                     className="rounded-full"
                                     style={{ width: '2rem', height: '2rem' }}
-                                />
+                                /> */}
                                 <span className="hidden sm:inline">{session.user.name}</span>
                             </button>
 

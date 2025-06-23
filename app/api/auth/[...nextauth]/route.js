@@ -34,7 +34,7 @@ export const authOptions = {
         async session({ session }) {
             await connectDb()
             const currentUser = await User.findOne({ email: session.user.email })
-            session.user.name = currentUser.name
+            session.user.name = currentUser?.name || currentUser?.username || session.user.name;
             return session
         }
     },
