@@ -10,10 +10,7 @@ const PaymentSchema = new Schema({
         type: String,
         required: true
     },
-    // from_user: {
-    //     type: String,
-    //     required: true
-    // },
+
     message: {
         type: String,
         required: true

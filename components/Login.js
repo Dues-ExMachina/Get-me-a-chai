@@ -70,10 +70,5 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Login;
 
-
-// export const metadata = {
-//     title: 'Login - Get Me a Chai',
-//     description: 'Login page for Get Me a Chai application',
-// }

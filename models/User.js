@@ -34,14 +34,7 @@ const UserSchema = new Schema({
 });
 
 
-// export default mongoose.models.User || mongoose.model("User", UserSchema);
+
 const models = mongoose.models || {};
 
 export default models.User || model("User", UserSchema);
-// Uncomment the following lines if you want to export the User model and connect to the database
-// export async function connectToDatabase() {
-//     if (mongoose.connection.readyState === 1) {
-//         return mongoose.connection.asPromise();
-//     }
-//     return mongoose.connect(process.env.MONGODB_URI);
-// }
