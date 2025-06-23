@@ -44,7 +44,11 @@ const Navbar = () => {
 
     // State for search input
     const [search, setSearch] = useState("")
+<<<<<<< HEAD
     //Profile pic
+=======
+ //Profile pic
+>>>>>>> cf7bf0af9e6438730ff68a8caf63b1875288c652
     const profileSrc = dbUser?.profilepic || session.user.image || "/images/profile2.jpg";
     // Handler for form submit
     const handleSearchSubmit = (e) => {
@@ -93,6 +97,7 @@ const Navbar = () => {
                                 onClick={() => setShowDropdown(!showDropdown)}
                                 className="flex items-center space-x-2 "
                             >
+<<<<<<< HEAD
                                 {/* <Image
                                     src={dbUser?.profilepic || session.user.image || "/images/profile2.jpg"}
                                     alt="Profile"
@@ -121,6 +126,16 @@ const Navbar = () => {
                                     className="rounded-full"
                                     style={{ width: '2rem', height: '2rem' }}
                                 /> */}
+=======
+                               <Image
+                                src={profileSrc}
+                                alt="Profile"
+                                width={32}
+                                height={32}
+                                className="rounded-full"
+                                style={{ width: '2rem', height: '2rem' }}
+                            />
+>>>>>>> cf7bf0af9e6438730ff68a8caf63b1875288c652
                                 <span className="hidden sm:inline">{session.user.name}</span>
                             </button>
 
