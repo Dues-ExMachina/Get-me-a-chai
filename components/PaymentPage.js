@@ -20,9 +20,30 @@ const PaymentPage = () => {
     const [payments, setPayments] = useState([]);
     const searchParams = useSearchParams();
     const router = useRouter();
+
+
+    // const getDate = async () => {
+    //     let u = await fetchuser(username);
+    //     setcurrentuser(u);
+    //     let dbp = await fetchpayments(username);
+    //     setPayments(dbp);
+
+    // }
+
+    // useEffect(() => {
+    //     getDate();
+    // }, []);
+
+    const getDate = useCallback(async () => {
+        let u = await fetchuser(username);
+        setcurrentuser(u);
+        let dbp = await fetchpayments(username);
+        setPayments(dbp);
+    }, [username]); // ✅ add dependencies it uses (here, `username`)
+
     useEffect(() => {
         getDate();
-    }, []);
+    }, [getDate]); // 
     //Show a success toast when payment is done
     useEffect(() => {
         if (searchParams.get('paymentDone') === 'true') {
@@ -46,13 +67,7 @@ const PaymentPage = () => {
         setPaymentform({ ...paymentform, [e.target.name]: e.target.value })
     }
 
-    const getDate = async () => {
-        let u = await fetchuser(username);
-        setcurrentuser(u);
-        let dbp = await fetchpayments(username);
-        setPayments(dbp);
 
-    }
 
 
     const { data: session, status } = useSession()
@@ -189,7 +204,7 @@ const PaymentPage = () => {
                                                 className="w-8"
                                             />
                                             <span>
-                                                {pay.name} donated <span className='font-bold'>₹{pay.amount}</span> with a message "{pay.message}"
+                                                {pay.name} donated <span className='font-bold'>₹{pay.amount}</span> with a message- {pay.message}
                                             </span>
                                         </li>
                                     );

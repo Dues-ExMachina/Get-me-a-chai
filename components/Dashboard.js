@@ -28,11 +28,10 @@ const Dashboard = () => {
 
     useEffect(() => {
         getdata();
-        // Redirect to login if unauthenticated
         if (status === 'unauthenticated') {
             router.push('/login');
         }
-    }, [status, router]);
+    }, [getdata, status, router]);
 
 
 
