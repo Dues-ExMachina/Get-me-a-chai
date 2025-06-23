@@ -1,77 +1,96 @@
-"use client"
-import Image from "next/image"
-import { useSession, signOut } from "next-auth/react"
-import Link from 'next/link'
-import { useState, useEffect, useRef } from 'react'
-import { fetchuser } from '@/actions/useractions'
-import localFont from 'next/font/local'
+"use client";
 
+import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+import { fetchuser } from "@/actions/useractions";
+import localFont from "next/font/local";
 
+// Load custom font with fallback
 const myFont = localFont({
-    src: '../font/Nevol.woff2',
-})
+    src: "../font/Nevol.woff2",
+    fallback: ["system-ui", "sans-serif"],
+});
+
 const Navbar = () => {
-    const { data: session } = useSession()
-    const [dbUser, setDbUser] = useState(null)
-    const [showDropdown, setShowDropdown] = useState(false)
+    const { data: session } = useSession();
+    const [dbUser, setDbUser] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef(null);
 
     useEffect(() => {
         const getUser = async () => {
             if (session?.user?.name) {
-                const user = await fetchuser(session.user.name)
-                setDbUser(user)
+                const user = await fetchuser(session.user.name);
+                setDbUser(user);
             }
-        }
-        getUser()
-    }, [session])
+        };
+        getUser();
+    }, [session]);
 
     useEffect(() => {
-        function handleClickOutside(event) {
+        const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setShowDropdown(false);
             }
-        }
+        };
+
+        const handleKeyDown = (event) => {
+            if (event.key === "Escape") {
+                setShowDropdown(false);
+            }
+        };
+
         if (showDropdown) {
             document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.addEventListener("keydown", handleKeyDown);
         }
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [showDropdown])
+    }, [showDropdown]);
 
-    // State for search input
-    const [search, setSearch] = useState("")
-<<<<<<< HEAD
-    //Profile pic
-=======
- //Profile pic
->>>>>>> cf7bf0af9e6438730ff68a8caf63b1875288c652
-    const profileSrc = dbUser?.profilepic || session.user.image || "/images/profile2.jpg";
-    // Handler for form submit
+    const [search, setSearch] = useState("");
+    const profileSrc = dbUser?.profilepic || session?.user?.image || "/images/profile2.jpg";
+
     const handleSearchSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (search.trim()) {
-            window.location.href = `/${search.trim()}`
+            window.location.href = `/${search.trim()}`;
         }
-    }
+    };
 
     return (
-        <nav className="bg-gray-900 text-white px-4 py-2 ">
+        <nav className="bg-gray-900 text-white px-4 py-2">
             <div className="container mx-auto flex justify-between items-center">
-                <Link href="/" className={`font-bold text-xl ${myFont.className}`}>Get Me a Chai</Link>
+                <Link href="/" className={`font-bold text-xl ${myFont.className}`}>
+                    Get Me a Chai
+                </Link>
+
                 <div className="flex items-center space-x-4 gap-2">
-                    <form
-                        className="mx-auto flex max-w-sm items-center"
-                        onSubmit={handleSearchSubmit}
-                    >
-                        <label htmlFor="simple-search" className="sr-only">Search</label>
+                    <form className="mx-auto flex max-w-sm items-center" onSubmit={handleSearchSubmit}>
+                        <label htmlFor="simple-search" className="sr-only">
+                            Search
+                        </label>
                         <div className="relative w-full">
                             <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
-                                <svg className="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2" />
+                                <svg
+                                    className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 18 20"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2"
+                                    />
                                 </svg>
                             </div>
                             <input
@@ -81,61 +100,47 @@ const Navbar = () => {
                                 placeholder="Search here..."
                                 required
                                 value={search}
-                                onChange={e => setSearch(e.target.value)}
+                                onChange={(e) => setSearch(e.target.value)}
                             />
                         </div>
-                        <button type="submit" className="ms-2 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            <svg className="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                        <button
+                            type="submit"
+                            className="ms-2 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        >
+                            <svg
+                                className="h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 20 20"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                                />
                             </svg>
                             <span className="sr-only">Search</span>
                         </button>
                     </form>
+
                     {session ? (
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={() => setShowDropdown(!showDropdown)}
-                                className="flex items-center space-x-2 "
+                                className="flex items-center space-x-2"
                             >
-<<<<<<< HEAD
-                                {/* <Image
-                                    src={dbUser?.profilepic || session.user.image || "/images/profile2.jpg"}
-                                    alt="Profile"
-                                    width={32}
-                                    height={32}
-                                    className="rounded-full"
-                                    style={{ width: '2rem', height: '2rem' }} // tailwind w-8 h-8 = 2rem
-                                    unoptimized={!(src?.startsWith("/"))} // optional: if external URL and you want to skip optimization
-                                /> */}
                                 <Image
                                     src={profileSrc}
                                     alt="Profile"
                                     width={32}
                                     height={32}
                                     className="rounded-full"
-                                    style={{ width: '2rem', height: '2rem' }}
-                                    unoptimized={!profileSrc.startsWith("/")} // unoptimized only for external URLs
+                                    style={{ width: "2rem", height: "2rem" }}
+                                    // unoptimized={!profileSrc.startsWith("/")}
                                 />
-                                {/* const profileSrc = dbUser?.profilepic || session.user.image || "/images/profile2.jpg"; */}
-
-                                {/* <Image
-                                    src={profileSrc}
-                                    alt="Profile"
-                                    width={32}
-                                    height={32}
-                                    className="rounded-full"
-                                    style={{ width: '2rem', height: '2rem' }}
-                                /> */}
-=======
-                               <Image
-                                src={profileSrc}
-                                alt="Profile"
-                                width={32}
-                                height={32}
-                                className="rounded-full"
-                                style={{ width: '2rem', height: '2rem' }}
-                            />
->>>>>>> cf7bf0af9e6438730ff68a8caf63b1875288c652
                                 <span className="hidden sm:inline">{session.user.name}</span>
                             </button>
 
@@ -178,7 +183,7 @@ const Navbar = () => {
                 </div>
             </div>
         </nav>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;
