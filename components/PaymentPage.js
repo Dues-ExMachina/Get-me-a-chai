@@ -1,4 +1,3 @@
-
 "use client"
 import Image from 'next/image'
 import { useCallback } from 'react'
@@ -22,6 +21,8 @@ const PaymentPage = () => {
     const [payments, setPayments] = useState([]);
     const searchParams = useSearchParams();
     const router = useRouter();
+
+    // ✅ MOVED a a-zA-Z - username is now declared at the top.
     const pathname = usePathname()
     const username = pathname.split('/')[1]
 
@@ -31,12 +32,13 @@ const PaymentPage = () => {
         setcurrentuser(u);
         let dbp = await fetchpayments(username);
         setPayments(dbp);
-    }, [username]);
+    }, [username]); // ✅ This is now safe.
 
     useEffect(() => {
         getDate();
     }, [getDate]);
 
+    //Show a success toast when payment is done
     useEffect(() => {
         if (searchParams.get('paymentDone') === 'true') {
             toast.success('Payment done!', {
@@ -50,10 +52,10 @@ const PaymentPage = () => {
                 theme: "light",
                 transition: Bounce,
             });
-            // ✅ MOVED: router.push is now conditional to prevent infinite loop
+            // Redirect to clear the query param and prevent the toast on refresh
             router.push(`/${username}`);
         }
-    }, [searchParams, router, username]);
+    }, [searchParams, router, username]); // ✅ This is now safe.
 
 
     function handleChange(e) {
@@ -62,9 +64,10 @@ const PaymentPage = () => {
 
     const { data: session, status } = useSession()
 
+    // get the orderID
     const payment = async (amount) => {
         let a = await initiate(amount, username, paymentform);
-        let orderId = a.id;
+        let orderId = a.id; // Razorpay returns order ID as 'id'
 
         var options = {
             "key": currentuser.Razorpayid,
@@ -153,10 +156,13 @@ const PaymentPage = () => {
                     />
                 </div>
             </div>
+
+            {/* Details section rendered below */}
             <div className='details text-center mt-16 md:mt-14 text-white flex flex-col items-center gap-1'>
                 <div className='text-3xl font-bold'>@{username}</div>
                 <div className='text-slate-400'>Lets help {username} to get a chai</div>
                 <div className='text-slate-400'>{payments.length} Payments · {currentuser.name} has bought: {Math.floor(payments.reduce((acc, pay) => acc + pay.amount, 0) / 20)} Chai · since {new Date(currentuser.createdAt).toLocaleDateString()} </div>
+
                 <div className="payments flex gap-3 w-[80vw] md:w-[80vw] justify-center mt-4 mb-20 flex-col md:flex-row">
                     <div className="supporters bg-slate-900 w-full md:w-1/2 rounded-lg p-4 md:p-10">
                         <h2 className='text-white mb-5 text-left text-2xl font-bold my-5'>Top 5 Supporters</h2>
@@ -187,25 +193,81 @@ const PaymentPage = () => {
                     <div className="pay bg-slate-900 w-full md:w-1/2 rounded-lg p-2 md:p-10">
                         <h2 className='text-2xl font-bold my-5'>Make a Payment</h2>
                         <div className='flex gap-2 flex-col mb-5 p-2 md:p-0'>
-                            <input name="name" onChange={handleChange} type="text" value={paymentform.name} className='w-full p-3 rounded-lg bg-slate-800' placeholder='Enter Name' />
-                            <input name="message" onChange={handleChange} type="text" value={paymentform.message} className='w-full p-3 rounded-lg bg-slate-800' placeholder='Enter Message' />
-                            <input name="amount" onChange={handleChange} type='number' value={paymentform.amount} className='w-full p-3 rounded-lg bg-slate-800' placeholder='Enter Amount' />
-                            <button onClick={() => payment(Number(paymentform.amount * 100))} type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 rounded-lg text-sm px-5 py-2.5 text-center font-bold mb-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled={!paymentform.amount || paymentform.name?.length < 3 || paymentform.message?.length < 3}>
+                            <input
+                                name="name"
+                                onChange={handleChange}
+                                type="text"
+                                value={paymentform.name}
+                                className='w-full p-3 rounded-lg bg-slate-800'
+                                placeholder='Enter Name'
+                            />
+                            <input
+                                name="message"
+                                onChange={handleChange}
+                                type="text"
+                                value={paymentform.message}
+                                className='w-full p-3 rounded-lg bg-slate-800'
+                                placeholder='Enter Message'
+                            />
+                            <input
+                                name="amount"
+                                onChange={handleChange}
+                                type='number'
+                                value={paymentform.amount}
+                                className='w-full p-3 rounded-lg bg-slate-800'
+                                placeholder='Enter Amount'
+                            />
+                            <button
+                                onClick={() => payment(Number(paymentform.amount * 100))}
+                                type="button"
+                                className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 rounded-lg text-sm px-5 py-2.5 text-center font-bold mb-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={!paymentform.amount || paymentform.name?.length < 3 || paymentform.message?.length < 3}
+
+                            >
                                 Pay
                             </button>
                         </div>
                         <span className='text-gray-400'>or choose a preset amount:</span>
                         <div className='flex p-2 gap-1 md:gap-2 mt-3 '>
-                            <button type="button" className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled={paymentform.name?.length < 3 || paymentform.message?.length < 3} onClick={() => { setPaymentform({ ...paymentform, amount: "10" }); payment(1000); }}>
+                            <button
+                                type="button"
+                                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={paymentform.name?.length < 3 || paymentform.message?.length < 3}
+                                onClick={() => {
+                                    setPaymentform({ ...paymentform, amount: "10" });
+                                    payment(1000);
+                                }}
+                            >
                                 Pay ₹10
                             </button>
-                            <button type="button" className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled={paymentform.name?.length < 3 || paymentform.message?.length < 3} onClick={() => { setPaymentform({ ...paymentform, amount: "15" }); payment(1500); }}>
+                            <button
+                                type="button"
+                                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled={paymentform.name?.length < 3 || paymentform.message?.length < 3}
+                                onClick={() => {
+                                    setPaymentform({ ...paymentform, amount: "15" });
+                                    payment(1500);
+                                }}
+                            >
                                 Pay ₹15
                             </button>
-                            <button type="button" className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled={paymentform.name?.length < 3 || paymentform.message?.length < 3} onClick={() => { setPaymentform({ ...paymentform, amount: "20" }); payment(2000); }}>
+                            <button
+                                type="button"
+                                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled={paymentform.name?.length < 3 || paymentform.message?.length < 3}
+                                onClick={() => {
+                                    setPaymentform({ ...paymentform, amount: "20" });
+                                    payment(2000);
+                                }}
+                            >
                                 Pay ₹20
                             </button>
-                            <button type="button" className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-0 md:me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled={paymentform.name?.length < 3 || paymentform.message?.length < 3} onClick={() => { setPaymentform({ ...paymentform, amount: "50" }); payment(5000); }}>
+                            <button
+                                type="button"
+                                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-0 md:me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled={paymentform.name?.length < 3 || paymentform.message?.length < 3}
+                                onClick={() => {
+                                    setPaymentform({ ...paymentform, amount: "50" });
+                                    payment(5000);
+                                }}
+                            >
                                 Pay ₹50
                             </button>
                         </div>
@@ -216,4 +278,4 @@ const PaymentPage = () => {
     )
 }
 
-export default PaymentPage
+export default PaymentPage;
