@@ -139,7 +139,7 @@ const Navbar = () => {
                                     height={32}
                                     className="rounded-full"
                                     style={{ width: "2rem", height: "2rem" }}
-                                    unoptimized={!profileSrc.startsWith("/")}
+                                    // unoptimized={!profileSrc.startsWith("/")}
                                 />
                                 <span className="hidden sm:inline">{session.user.name}</span>
                             </button>
