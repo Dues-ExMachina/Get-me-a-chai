@@ -6,7 +6,7 @@ import PaymentPage from "@/components/PaymentPage"
 import { notFound } from "next/navigation";
 import connectDb from "@/utils/db/connectDb";
 import User from "@/models/User";
-// import { useCallback } from "react"; // ❌ REMOVED: Cannot use hooks in Server Components
+
 
 const Username = async ({ params }) => {
     await connectDb();
