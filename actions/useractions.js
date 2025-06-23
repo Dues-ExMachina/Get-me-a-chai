@@ -1,4 +1,3 @@
-
 'use server'
 
 import connectDb from "@/utils/db/connectDb";
@@ -6,17 +5,25 @@ import User from "@/models/User";
 import Payment from "@/models/Payment";
 import Razorpay from "razorpay";
 
+
 export const initiate = async (amount, to_user, paymentform) => {
-    // ... (This function is fine)
     await connectDb();
+
     const user = await User.findOne({ username: to_user });
     if (!user) {
-        throw new Error("User not found");
+        throw new Error("Creator not found");
     }
+
+    // ✅ ADD THIS VALIDATION BLOCK
+    if (!user.Razorpayid || !user.Razorpaysecret) {
+        throw new Error("This creator has not set up payments yet.");
+    }
+
     var instance = new Razorpay({
         key_id: user.Razorpayid,
         key_secret: user.Razorpaysecret
     });
+
     let options = {
         amount: Number.parseInt(amount),
         currency: "INR",
@@ -27,6 +34,7 @@ export const initiate = async (amount, to_user, paymentform) => {
         }
     };
     let x = await instance.orders.create(options);
+
     await Payment.create({
         amount: amount / 100,
         to_user: user.username,
@@ -38,8 +46,8 @@ export const initiate = async (amount, to_user, paymentform) => {
     return x;
 }
 
+// ... other functions remain the same
 export const fetchuser = async (username) => {
-    // ... (This function is fine)
     await connectDb();
     let u = await User.findOne({ username: username }).lean();
     if (!u) return null;
@@ -52,7 +60,6 @@ export const fetchuser = async (username) => {
 }
 
 export const fetchpayments = async (username) => {
-    // ... (This function is fine)
     await connectDb();
     let p = await Payment.find({ to_user: username, done: true })
         .sort({ createdAt: -1 })
@@ -71,21 +78,16 @@ export const updateProfile = async (data, oldusername) => {
     let ndata = data;
     try {
         if (oldusername !== ndata.username) {
-            // ✅ CORRECTED: Check if the NEW username is already taken
             let u = await User.findOne({ username: ndata.username });
             if (u) {
                 return { error: "Username already exists" };
             }
-            // If available, update the user found by their OLD username
             await User.updateOne({ username: oldusername }, ndata);
         } else {
-            // If username is not changing, just update the data
             await User.updateOne({ username: oldusername }, ndata);
         }
         return { success: true };
     } catch (error) {
         return { error: error.message || "Update failed" };
     }
-    // ❌ REMOVED: This line was unreachable and redundant
-    // await User.updateOne({ email: ndata.email }, ndata);
 }
