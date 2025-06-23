@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image"
 import { useSession, signOut } from "next-auth/react"
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
@@ -89,10 +90,14 @@ const Navbar = () => {
                                 onClick={() => setShowDropdown(!showDropdown)}
                                 className="flex items-center space-x-2 "
                             >
-                                <img
+                                <Image
                                     src={dbUser?.profilepic || session.user.image || "/images/profile2.jpg"}
                                     alt="Profile"
-                                    className="w-8 h-8 rounded-full"
+                                    width={32}
+                                    height={32}
+                                    className="rounded-full"
+                                    style={{ width: '2rem', height: '2rem' }} // tailwind w-8 h-8 = 2rem
+                                    unoptimized={!(src?.startsWith("/"))} // optional: if external URL and you want to skip optimization
                                 />
                                 <span className="hidden sm:inline">{session.user.name}</span>
                             </button>

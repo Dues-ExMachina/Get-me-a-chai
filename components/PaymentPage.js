@@ -1,4 +1,5 @@
 "use client"
+import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import Script from 'next/script'
 import { useSession } from "next-auth/react"
@@ -49,7 +50,6 @@ const PaymentPage = () => {
         let u = await fetchuser(username);
         setcurrentuser(u);
         let dbp = await fetchpayments(username);
-        // setpayments(dbp);
         setPayments(dbp);
 
     }
@@ -135,13 +135,26 @@ const PaymentPage = () => {
             />
             <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
             <div className='w-full h-[35vh] relative'>
-                <img
-                    className='w-full h-full object-cover'
-                    src={currentuser?.coverpic || '/images/cover.jpg'}
-                    alt="Cover image"
-                />
+                <div className="relative w-full h-[200px]"> {/* Or any fixed height */}
+                    <Image
+                        src={currentuser?.coverpic || '/images/cover.jpg'}
+                        alt="Cover image"
+                        fill
+                        className="object-cover"
+                        unoptimized
+                    />
+                </div>
                 <div className="profilePic h-18 w-18 md:h-20 md:w-20 absolute bottom-[-3rem] left-1/2 transform -translate-x-1/2">
-                    <img className='rounded-2xl' src={currentuser?.profilepic || '/images/profile2.jpg'} alt="Profile" />
+
+
+                    <Image
+                        src={currentuser?.profilepic || '/images/profile2.jpg'}
+                        alt="Profile"
+                        width={100} // or adjust based on your design
+                        height={100}
+                        className="rounded-2xl object-cover"
+                        unoptimized // keep this if profilepic might be external
+                    />
                 </div>
             </div>
 
@@ -167,7 +180,14 @@ const PaymentPage = () => {
                                 .map((pay, index) => {
                                     return (
                                         <li key={index} className='my-2 flex gap-2 items-center'>
-                                            <img className='w-8' src="/images/avatar.gif" alt="avtar" />
+
+                                            <Image
+                                                src="/images/avatar.gif"
+                                                alt="avatar"
+                                                width={32}
+                                                height={32}
+                                                className="w-8"
+                                            />
                                             <span>
                                                 {pay.name} donated <span className='font-bold'>₹{pay.amount}</span> with a message "{pay.message}"
                                             </span>

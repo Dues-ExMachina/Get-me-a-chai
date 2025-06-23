@@ -9,7 +9,13 @@ export default function Home() {
     <>
       {/* //top section */}
       <div className="flex flex-col items-center justify-center gap-4 h-[48vh] w-full text-white p-2">
-        <div className={`text-5xl flex gap-2 justify-center items-center font-bold ${myFont.className}`}>Buy me a chai <span><img src="/images/tea.gif" className="invertImg" width={88} alt="" /></span></div>
+        <div className={`text-5xl flex gap-2 justify-center items-center font-bold ${myFont.className}`}>Buy me a chai <span><Image
+          src="/images/tea.gif"
+          alt="Tea pouring"
+          width={88}
+          height={88}
+          className="invertImg"
+        /></span></div>
         <p className="text-center text-lg">
           a crowdfunding platform to fund your project with chai. Get funded by your supporters and enjoy a cup of chai together!
         </p>
@@ -38,17 +44,36 @@ export default function Home() {
         <h1 className="text-2xl font-bold mb-8">Your fans can buy you a chai</h1>
         <div className="flex gap-8 md:gap-4 justify-around items-center flex-wrap sm:flex-col md:flex-row">
           <div className="item space-y-3 flex flex-col items-center">
-            <img width={88} className="bg-slate-500 p-2 rounded-full " src="/images/man.gif" alt="" />
+            <Image
+              src="/images/man.gif"
+              alt="Profile picture"
+              width={88}
+              height={88}
+              className="bg-slate-500 p-2 rounded-full"
+            />
             <p className="text-white font-bold">Fans want to help</p>
             <p>Your fans are availabe for you</p>
           </div>
           <div className="item space-y-3 flex flex-col items-center">
-            <img width={88} className="bg-slate-500 p-2 rounded-full " src="/images/coin.gif" alt="" />
+            <Image
+              src="/images/coin.gif"
+              alt="Profile picture"
+              width={88}
+              height={88}
+              className="bg-slate-500 p-2 rounded-full"
+            />
             <p className="text-white font-bold">Fans want to help</p>
             <p>Your fans are availabe for you</p>
           </div>
           <div className="item space-y-3 flex flex-col items-center">
-            <img width={88} className="bg-slate-500 p-2 rounded-full " src="/images/group.gif" alt="" />
+
+            <Image
+              src="/images/group.gif"
+              alt="Profile picture"
+              width={88}
+              height={88}
+              className="bg-slate-500 p-2 rounded-full"
+            />
             <p className="text-white font-bold">Fans want to help</p>
             <p>Your fans are availabe for you</p>
           </div>
