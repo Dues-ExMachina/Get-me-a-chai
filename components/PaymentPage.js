@@ -147,23 +147,23 @@ const PaymentPage = () => {
             <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
 
             <div className="w-full relative">
-              {/* Cover Image */}
-                  <div className="relative w-full h-[35vh]">
-                    <Image
-                      src={currentuser?.coverpic || '/images/cover.jpg'}
-                      alt="Cover image"
-                      fill
-                      className="object-cover"
-                      unoptimized
-                      priority
-                        />
-                 </div>
+  {/* Cover Image */}
+  <div className="relative w-full h-40 md:h-[35vh]"> 
+    <Image
+      src={currentuser?.coverpic || '/images/cover.jpg'}
+      alt="Cover image"
+      fill
+      className="object-cover"
+      unoptimized
+      priority
+    />
+  </div>
 
-                  {/* Profile Picture - centered and overlapping bottom */}
-                  <div className="absolute bottom-[-2.5rem] left-1/2 transform -translate-x-1/2 h-20 w-20 md:h-24 md:w-24">
-                        <Image
-                      src={currentuser?.profilepic || '/images/profile2.jpg'}
-                  alt="Profile"
+  {/* Profile Picture */}
+  <div className="absolute bottom-[-2.5rem] left-1/2 transform -translate-x-1/2 h-20 w-20 md:h-24 md:w-24">
+    <Image
+      src={currentuser?.profilepic || '/images/profile2.jpg'}
+      alt="Profile"
       width={96}
       height={96}
       className="rounded-full object-cover border-4 border-white shadow-md w-full h-full"
